@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# California CDL Exam Sprint Guide — Website
 
-## Getting Started
+Marketing + sales website for the **California CDL Exam Sprint Guide**, a paid
+digital product (12-page PDF) for California CDL permit test preparation.
 
-First, run the development server:
+## Tech stack
+
+- **Next.js 16** (App Router, Turbopack) · **React 19** · **TypeScript** (strict)
+- **Tailwind CSS v4** (theme tokens in `app/globals.css`)
+- **next/font** — Montserrat (headings) + Inter (body), self-hosted at build
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev       # local dev
+npm run lint      # 0 errors
+npm run build     # production build
+npm run start     # serve the production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Directory structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+app/                 # routes (page.tsx, layout.tsx, sitemap.ts, robots.ts)
+  preview/ faq/ privacy/ terms/ refund/ contact/ access/
+components/
+  layout/            # Header, Footer, LegalPage
+  marketing/         # homepage sections (Hero → FinalCTA)
+  product/           # AccessForm
+  seo/               # JsonLd
+  ui/                # Button, Badge, Card, SectionHeading
+content/             # product.ts, homepage.ts, faq.ts (marketing copy + facts)
+lib/
+  assets.ts          # centralized image paths/dimensions
+  site.ts            # site config (domain, SEO)
+  utils.ts           # cn() class combiner
+  payment/           # provider abstraction (types, mock, factory)
+  analytics.ts       # event abstraction
+public/images/       # PDF preview PNGs (generated)
+scripts/generate-images.py   # regenerates previews + OG from the source PDF
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Content source of truth
 
-## Learn More
+**The PDF is the product source of truth.** `content/product.ts` mirrors it — key
+numbers, air-brake figures, and section descriptions must stay in sync. Marketing
+copy lives in `content/homepage.ts`; FAQ in `content/faq.ts`.
 
-To learn more about Next.js, take a look at the following resources:
+Preview images are rendered from the real PDF at
+`../../California_CDL_Exam_Sprint_Guide_V1.pdf` via
+`python scripts/generate-images.py`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Payment & delivery
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Checkout:** Creem hosted checkout (`POST /api/checkout` → redirect). The Creem
+  product id is read from `products.creem_product_id` (single source of truth), not
+  from an env var.
+- **Webhooks:** `POST /api/webhooks/creem` (HMAC-SHA256 verified, idempotent).
+- **Database:** Supabase Postgres — `products`, `orders`, `entitlements`,
+  `webhook_events`. Schema in `supabase/migrations/0001_init.sql`.
+- **Delivery:** Supabase private Storage + short-lived signed URLs (`lib/access.ts`).
+- **Analytics:** `lib/analytics.ts` defines stable event names; `track()` is a
+  no-op pending a real provider.
 
-## Deploy on Vercel
+## Environment variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Copy `.env.example` to `.env.local`. Set `NEXT_PUBLIC_SITE_URL` in production.
+All `CREEM_*` and `SUPABASE_*` values are server-side secrets — never
+`NEXT_PUBLIC_`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+Deploy to Vercel: connect the repo, set `NEXT_PUBLIC_SITE_URL`, done. No secrets
+are required for the current mock build.

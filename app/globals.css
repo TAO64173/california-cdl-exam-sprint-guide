@@ -1,26 +1,72 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+   California CDL Exam Sprint Guide — design tokens
+   Direction: professional American CDL training manual. Navy + safety yellow,
+   high information density, strong typography, minimal radius, no dark mode.
+--------------------------------------------------------------------------- */
+
+@theme {
+  /* Brand palette */
+  --color-navy: #0b1f3a;
+  --color-navy-900: #081629;
+  --color-navy-800: #122a4d;
+  --color-navy-700: #1a3560;
+  --color-navy-100: #e7ecf3;
+
+  --color-yellow: #f5c518;
+  --color-yellow-600: #d9ad0f;
+
+  --color-paper: #f6f7f9;
+  --color-paper-2: #eef0f3;
+
+  --color-ink: #222222;
+  --color-ink-muted: #5b6169;
+  --color-line: #e4e7eb;
+
+  /* Typography */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Arial, Helvetica, sans-serif;
+  --font-display: var(--font-montserrat), var(--font-inter), ui-sans-serif,
+    system-ui, "Segoe UI", Arial, Helvetica, sans-serif;
+}
+
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #222222;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Consistent focus visibility (accessibility) */
+:focus-visible {
+  outline: 2px solid var(--color-yellow);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--color-yellow);
+  color: var(--color-navy);
+}
+
+/* Small reusable motifs for the "manual" feel */
+.hazard-bar {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-yellow) 0,
+    var(--color-yellow) 10px,
+    transparent 10px,
+    transparent 20px
+  );
 }
