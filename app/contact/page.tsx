@@ -15,19 +15,13 @@ export default function ContactPage() {
       </p>
 
       <p>
-        {/* TODO: replace with a real support email before going live. */}
         Email:{" "}
         <a
-          href="mailto:support@example.com"
+          href="mailto:taoq8397@gmail.com"
           className="font-medium text-navy underline underline-offset-2 hover:text-navy-700"
         >
-          support@example.com
+          taoq8397@gmail.com
         </a>
-      </p>
-
-      <p>
-        Please note: this is a placeholder contact address for the website build. A
-        production support channel will be configured before launch.
       </p>
     </LegalPage>
   );

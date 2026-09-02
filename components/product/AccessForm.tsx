@@ -66,7 +66,7 @@ export default function AccessForm() {
         required
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="you@example.com"
+        placeholder="Enter your email"
         className="mt-2 w-full rounded-sm border border-line bg-white px-4 py-3 text-base text-ink placeholder:text-ink-muted/60 focus:border-navy focus:outline-none"
       />
       <button
