@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
+import CtaButton from "@/components/ui/CtaButton";
 import { product } from "@/content/product";
 import { hero } from "@/content/homepage";
 import { assets } from "@/lib/assets";
@@ -30,9 +31,9 @@ export default function Hero() {
             </p>
 
             <div className="mt-8 flex flex-wrap gap-4">
-              <Button href="/#pricing" variant="primary" size="lg">
+              <CtaButton href="/#pricing" cta="hero_get_guide" size="lg">
                 {product.cta.primary}
-              </Button>
+              </CtaButton>
               <Button href="/#inside" variant="outlineLight" size="lg">
                 {product.cta.secondary}
               </Button>

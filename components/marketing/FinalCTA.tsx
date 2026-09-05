@@ -1,4 +1,4 @@
-import Button from "@/components/ui/Button";
+import CtaButton from "@/components/ui/CtaButton";
 import { finalCta } from "@/content/homepage";
 import { product } from "@/content/product";
 
@@ -12,9 +12,9 @@ export default function FinalCTA() {
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-lg text-white/70">{finalCta.supporting}</p>
         <div className="mt-8">
-          <Button href="/#pricing" variant="primary" size="lg">
+          <CtaButton href="/#pricing" cta="final_cta_get_guide" size="lg">
             {product.cta.primary}
-          </Button>
+          </CtaButton>
         </div>
       </div>
     </section>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Button from "@/components/ui/Button";
+import CtaButton from "@/components/ui/CtaButton";
 import { product } from "@/content/product";
 
 const nav = [
@@ -40,7 +40,9 @@ export default function Header() {
         </nav>
 
         <div className="hidden md:block">
-          <Button href="/#pricing">{product.cta.primary}</Button>
+          <CtaButton href="/#pricing" cta="header_get_guide">
+            {product.cta.primary}
+          </CtaButton>
         </div>
 
         <button
@@ -74,9 +76,9 @@ export default function Header() {
               </Link>
             ))}
             <div className="py-4">
-              <Button href="/#pricing" className="w-full" size="lg">
+              <CtaButton href="/#pricing" cta="header_get_guide" className="w-full" size="lg">
                 {product.cta.primary}
-              </Button>
+              </CtaButton>
             </div>
           </nav>
         </div>

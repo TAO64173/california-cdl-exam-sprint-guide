@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Inter, Montserrat } from "next/font/google";
+import Script from "next/script";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { site } from "@/lib/site";
@@ -47,10 +48,27 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+const gaId = process.env.NEXT_PUBLIC_GA_ID;
+const isProd = process.env.NODE_ENV === "production";
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${montserrat.variable} ${inter.variable}`}>
       <body className="flex min-h-screen flex-col bg-white text-ink antialiased">
+        {isProd && gaId ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${gaId}');`}
+            </Script>
+          </>
+        ) : null}
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

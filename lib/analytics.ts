@@ -1,6 +1,6 @@
-// Analytics event abstraction. Stable event + CTA names let a real provider
-// (Plausible, GA4, …) be wired in later without renaming events. Analytics is
-// observational only — it never determines order/access state.
+// Analytics event abstraction. Stable event + CTA names let GA4 (or another
+// provider) be wired in without renaming events. Analytics is observational
+// only — it never determines order/access state.
 
 export type AnalyticsEventName =
   | "page_view"
@@ -27,7 +27,18 @@ export interface AnalyticsPayload {
   [key: string]: unknown;
 }
 
-// No-op for V1. Swap the body for a real provider without touching call sites.
-export function track(_payload: AnalyticsPayload): void {
-  // TODO: wire to the chosen analytics provider.
+declare global {
+  interface Window {
+    dataLayer?: unknown[];
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
+// Sends a client-side GA4 event. No-ops on the server (where `window` is
+// undefined) and when the GA4 snippet hasn't loaded. Server-side events
+// (checkout/webhook/access) remain no-ops until Measurement Protocol is added.
+export function track(payload: AnalyticsPayload): void {
+  if (typeof window === "undefined" || typeof window.gtag !== "function") return;
+  const { name, ...params } = payload;
+  window.gtag("event", name, params);
 }

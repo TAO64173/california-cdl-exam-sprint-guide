@@ -33,7 +33,7 @@ export default function PrivacyPage() {
 
       <h2 className="font-display text-lg font-bold text-navy">Third-party services</h2>
       <p>
-        When you purchase or visit, a payment processor and an analytics provider may
+        When you purchase or visit, a payment processor and Google Analytics may
         process data on our behalf. Each service is governed by its own privacy policy.
       </p>
 
