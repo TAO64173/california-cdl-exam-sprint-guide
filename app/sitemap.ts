@@ -5,6 +5,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const resources = [
     "/resources/cdl-written-test",
     "/resources/cdl-study-guide",
+    "/resources/cdl-pre-trip",
     "/resources/cdl-air-brakes/psi",
     "/resources/cdl-air-brakes/cut-out-pressure",
     "/resources/cdl-air-brakes/cut-in-pressure",
