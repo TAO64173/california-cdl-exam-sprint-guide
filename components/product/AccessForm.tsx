@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { track } from "@/lib/analytics";
+import { getGtagClientId, track } from "@/lib/analytics";
 
 // Entitlement-based access: email in → server checks active entitlement →
 // short-lived signed URL out. The code is never a substitute for a real purchase.
@@ -18,10 +18,11 @@ export default function AccessForm() {
     setUrl("");
 
     try {
+      const clientId = await getGtagClientId();
       const res = await fetch("/api/access", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, client_id: clientId }),
       });
       const data = (await res.json()) as { url?: string; error?: string };
       if (res.ok && data.url) {

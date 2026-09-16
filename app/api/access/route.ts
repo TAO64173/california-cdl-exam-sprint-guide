@@ -26,12 +26,18 @@ export async function POST(request: Request) {
       : undefined;
   const email = raw?.trim().toLowerCase() ?? "";
 
+  const rawClientId =
+    typeof body === "object" && body !== null
+      ? ((body as Record<string, unknown>).client_id as string | undefined)
+      : undefined;
+  const clientId = rawClientId || undefined;
+
   if (!email || !EMAIL_RE.test(email)) {
     return NextResponse.json({ error: "Enter a valid email address." }, { status: 400 });
   }
 
   try {
-    const result = await grantAccess(email);
+    const result = await grantAccess(email, clientId);
     if ("error" in result) {
       return NextResponse.json({ error: result.error }, { status: result.status });
     }

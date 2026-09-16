@@ -27,7 +27,10 @@ export class CreemPaymentProvider implements PaymentProvider {
         product_id: request.providerProductId,
         request_id: crypto.randomUUID(),
         success_url: request.successUrl,
-        metadata: { product_slug: request.productId },
+        metadata: {
+          product_slug: request.productId,
+          ...(request.clientId ? { client_id: request.clientId } : {}),
+        },
       }),
     });
 
@@ -132,4 +135,19 @@ export function buildProviderEventId(eventType: string, event: unknown): string 
 
   if (!businessId) return null;
   return `${eventType}:${businessId}`;
+}
+
+/** Extract the GA4 client_id (if any) from the checkout metadata echoed in the webhook. */
+export function parseClientId(event: unknown): string | null {
+  const inner = asObject(asObject(event)?.object);
+  if (!inner) return null;
+
+  const checkoutMeta = asObject(asObject(inner.checkout)?.metadata);
+  const topMeta = asObject(inner.metadata);
+
+  const fromCheckout =
+    checkoutMeta && typeof checkoutMeta.client_id === "string" ? checkoutMeta.client_id : null;
+  const fromTop = topMeta && typeof topMeta.client_id === "string" ? topMeta.client_id : null;
+
+  return fromCheckout ?? fromTop;
 }

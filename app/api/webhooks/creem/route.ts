@@ -1,4 +1,4 @@
-import { track } from "@/lib/analytics";
+import { trackServer } from "@/lib/analytics-server";
 import { revokeEntitlementByOrderId, grantEntitlement } from "@/lib/db/entitlements";
 import { setOrderStatus, upsertOrderPaid } from "@/lib/db/orders";
 import { getProductBySlug } from "@/lib/db/products";
@@ -10,6 +10,7 @@ import { getPaymentProvider } from "@/lib/payment";
 import {
   buildProviderEventId,
   parseCheckoutCompleted,
+  parseClientId,
   parseRefundOrDisputeOrderId,
 } from "@/lib/payment/providers/creem";
 import { PRODUCT_SLUG } from "@/lib/products";
@@ -34,7 +35,6 @@ async function processEvent(eventType: string, event: Record<string, unknown>): 
       productId: product.id,
       customerEmail: completed.email,
     });
-    track({ name: "purchase_success" });
     return;
   }
 
@@ -45,7 +45,6 @@ async function processEvent(eventType: string, event: Record<string, unknown>): 
     const status = eventType === "refund.created" ? "refunded" : "failed";
     const orderId = await setOrderStatus(providerOrderId, status);
     if (orderId) await revokeEntitlementByOrderId(orderId);
-    track({ name: "purchase_failed" });
     return;
   }
 
@@ -91,6 +90,14 @@ export async function POST(request: Request) {
   try {
     await processEvent(eventType, event);
     await markWebhookEventProcessed("creem", providerEventId);
+
+    // GA4 server-side tracking — at-most-once, after the idempotency marker.
+    const clientId = parseClientId(event);
+    if (eventType === "checkout.completed") {
+      await trackServer("purchase_success", { product_slug: PRODUCT_SLUG, client_id: clientId });
+    } else if (eventType === "refund.created" || eventType === "dispute.created") {
+      await trackServer("purchase_failed", { product_slug: PRODUCT_SLUG, client_id: clientId });
+    }
   } catch {
     // Left unprocessed so Creem's retry (or manual resend) can recover.
     return new Response("Processing failed", { status: 500 });

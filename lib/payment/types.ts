@@ -51,6 +51,8 @@ export interface CheckoutRequest {
   /** Provider-specific product reference (Creem product id), resolved from the DB. */
   providerProductId: string;
   successUrl: string;
+  /** GA4 client_id for session stitching (optional; echoed back in the webhook). */
+  clientId?: string;
 }
 
 export interface CheckoutResult {
