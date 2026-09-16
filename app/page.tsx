@@ -10,6 +10,7 @@ import AudienceSection from "@/components/marketing/AudienceSection";
 import IsIsNotSection from "@/components/marketing/IsIsNotSection";
 import TrustSection from "@/components/marketing/TrustSection";
 import HowItWorks from "@/components/marketing/HowItWorks";
+import ResourcesSection from "@/components/marketing/ResourcesSection";
 import Pricing from "@/components/marketing/Pricing";
 import FaqSection from "@/components/marketing/FaqSection";
 import FinalCTA from "@/components/marketing/FinalCTA";
@@ -54,6 +55,7 @@ export default function HomePage() {
       <IsIsNotSection />
       <TrustSection />
       <HowItWorks />
+      <ResourcesSection />
       <Pricing />
       <FaqSection />
       <FinalCTA />

@@ -77,6 +77,8 @@ export default function LowAirWarningPage() {
 
       <RelatedLinks
         links={[
+          { href: "/resources/cdl-written-test", label: "California CDL Written Test" },
+          { href: "/resources/cdl-study-guide", label: "California CDL Study Guide" },
           { href: "/resources/cdl-air-brakes/psi", label: "Air Brake PSI Numbers" },
           { href: "/resources/cdl-air-brakes/cut-out-pressure", label: "Cut-Out Pressure (125 PSI)" },
           { href: "/resources/cdl-air-brakes/cut-in-pressure", label: "Cut-In Pressure (100 PSI)" },
